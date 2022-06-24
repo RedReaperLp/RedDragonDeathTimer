@@ -1,0 +1,9 @@
+name: RedDragonDeathTimer
+website: https://wlo.link/@redreaperlp
+version: '1.0'
+main: com.github.redreaperlp.reddragondeathtimer.RedDragonDeathTimer
+api-version: 1.18
+softdepend: [ RedPermsAPI ]
+authors: [ RedReaperLp ]
+commands:
+  timer:
