@@ -198,7 +198,7 @@ public class RedDragonDeathTimer extends JavaPlugin implements Listener {
                 }
                 player.kickPlayer(this.prefix + ChatColor.RED + "Map Reset");
                 for (String permission : playerPerms) {
-                    permissionManager.givePlayerPermission(player.getName(), permission, console, true);
+                    permissionManager.givePlayerPermission(player.getName(), permission, null, true);
                 }
             }
         } else {
