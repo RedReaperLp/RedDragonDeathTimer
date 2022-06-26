@@ -1,3 +1,7 @@
+![](https://img.shields.io/spiget/tested-versions/101793)
+![](https://img.shields.io/github/v/release/redreaperlp/reddragondeathtimer)
+![](https://img.shields.io/github/downloads/redreaperlp/reddragondeathtimer/total)
+
 This is a plugin mostly for Speedrunners, who don´t want to use a Stream timer. Here you have the Timer in the Actionbar above your Experiencebar. The Timer will automatically be stopped, if you beat the Ender_Dragon.
 
 It is compatible with the RedPermsAPI to give you the ability to set permissions, for who can use the following commands:
