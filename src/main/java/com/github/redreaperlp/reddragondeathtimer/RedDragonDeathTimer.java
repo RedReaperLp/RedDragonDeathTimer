@@ -6,20 +6,23 @@ import com.github.redreaperlp.reddragondeathtimer.listener.DragonDeathListener;
 import com.github.redreaperlp.reddragondeathtimer.listener.MoveListener;
 import com.github.redreaperlp.reddragondeathtimer.listener.PlayerDamageListener;
 import com.github.redreaperlp.reddragondeathtimer.listener.PlayerDeath;
-import com.github.redreaperlp.redpermsapi.Managers.PermissionManager;
-import com.github.redreaperlp.redpermsapi.RedPermsAPI;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.GameRule;
 import org.bukkit.boss.BossBar;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RedDragonDeathTimer extends JavaPlugin implements Listener {
 
@@ -39,7 +42,6 @@ public class RedDragonDeathTimer extends JavaPlugin implements Listener {
     public boolean hint = false;
     public boolean wait = false;
     public boolean firstday;
-    public boolean redPermsAPI = false;
     public int sec = 0;
     public int delay;
 
@@ -58,18 +60,6 @@ public class RedDragonDeathTimer extends JavaPlugin implements Listener {
                 prefix + "§awebsites: " + getDescription().getWebsite(),
                 prefix + "§b-----------------------------------------------------");
 
-        if (getServer().getPluginManager().getPlugin("RedPermsAPI") != null) {
-            console.sendMessage(prefix + "§aRedPermsAPI has been detected!");
-            PermissionManager permissionManager = new PermissionManager();
-            permissionManager.addPermission(null, List.of(
-                    "deathtimer_use",
-                    "deathtimer_toggle_timer",
-                    "deathtimer_toggle_hint",
-                    "deathtimer_toggle_auto",
-                    "deathtimer_reset",
-                    "deathtimer_all"));
-            redPermsAPI = true;
-        }
         getCommand("timer").setExecutor(new Timer(this));
         getCommand("timer").setTabCompleter(new Timer(this));
 
@@ -151,6 +141,15 @@ public class RedDragonDeathTimer extends JavaPlugin implements Listener {
         } else {
             GamerulesOn();
         }
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (getConfig().get(player.getUniqueId().toString()) != null) {
+                List<String> permissions = getConfig().getStringList(player.getUniqueId().toString());
+                for (String permission : permissions) {
+                    player.addAttachment(this).setPermission(permission, true);
+                }
+                getConfig().set(player.getUniqueId().toString(), null);
+            }
+        }
     }
 
     public void waitOff() {
@@ -186,33 +185,26 @@ public class RedDragonDeathTimer extends JavaPlugin implements Listener {
     }
 
     public void shutDown() {
-        if (redPermsAPI) {
-            PermissionManager permissionManager = new PermissionManager();
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                List<String> permissions = RedPermsAPI.instance.getConfig().getStringList("permissions");
-                List<String> playerPerms = new ArrayList<>();
-                for (String permission : permissions) {
-                    if (permissionManager.askPermission(player.getName(), permission, null)) {
-                        playerPerms.add(permission);
-                    }
-                }
-                player.kickPlayer(this.prefix + ChatColor.RED + "Map Reset");
-                for (String permission : playerPerms) {
-                    permissionManager.givePlayerPermission(player.getName(), permission, null, true);
-                }
+
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Set<PermissionAttachmentInfo> pPerms = player.getEffectivePermissions();
+            List<String> permissions = new ArrayList<>();
+            for (PermissionAttachmentInfo perm : pPerms) {
+                permissions.add(perm.getPermission());
             }
-        } else {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                player.kickPlayer(this.prefix + ChatColor.RED + "Map Reset");
-            }
+
+            getConfig().set(player.getUniqueId().toString(), permissions);
+
+            player.kickPlayer(this.prefix + ChatColor.RED + "Map Reset");
+
         }
-        this.getInstance().sec = 0;
-        this.getInstance().wait = true;
-        this.getInstance().failed = false;
-        this.getInstance().firstday = true;
-        this.getInstance().GamerulesOff();
-        this.getInstance().getConfig().set("isReset", true);
-        this.getInstance().getConfig().set("seconds", 0);
+        sec = 0;
+        wait = true;
+        failed = false;
+        firstday = true;
+        GamerulesOff();
+        getConfig().set("isReset", true);
+        getConfig().set("seconds", 0);
         Bukkit.spigot().restart();
     }
 

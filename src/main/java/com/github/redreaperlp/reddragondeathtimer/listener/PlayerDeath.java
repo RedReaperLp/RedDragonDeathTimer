@@ -10,8 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -46,9 +44,11 @@ public class PlayerDeath implements Listener {
             bossBar();
         }
     }
+
     public boolean isActive = false;
 
     int bb = 0;
+
     public void bossBar() {
         isActive = true;
         if (plugin.bossBar == null) {

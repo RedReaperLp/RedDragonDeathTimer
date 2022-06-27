@@ -12,22 +12,26 @@ Link to RedPermsAPI: https://www.github.com/RedReaperLp/RedPermsAPI
 /timer toggle :
 - Starts/Stops the timer
 - Says in chat, if Timer is en/disabled
+- Requires the permission "deathtimer.toggle.timer"
 
 /timer auto :
 - en/disables timer start on player-movement
 - says in chat, if this is en/disabled
 - keeps settings after server restart
+- requires the permission "deathtimer.toggle.auto"
 
 /timer reset :
 - resets the server after 10 seconds
 - new world generation on server-startup
 - timer will be reseted
 - keeps settings after server restart
+- requires the permission "deathtimer.reset"
 
 /timer hint :
 - en/disables Player-Damage Indicator
 - says in chat, if this is en/disabled
 - keeps settings after server restart
+- requires the permission "deathtimer.toggle.hint"
 
 
 Player-Death :

@@ -3,7 +3,6 @@ package com.github.redreaperlp.reddragondeathtimer.commands;
 import com.github.redreaperlp.reddragondeathtimer.RedDragonDeathTimer;
 import com.github.redreaperlp.reddragondeathtimer.handler.ActionBarHandler;
 import com.github.redreaperlp.reddragondeathtimer.listener.PlayerDeath;
-import com.github.redreaperlp.redpermsapi.Managers.PermissionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -28,19 +27,9 @@ public class Timer implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
-        if (plugin.redPermsAPI) {
-            PermissionManager permissionManager = new PermissionManager();
-            if (permissionManager.askPermission(null, "deathtimer_all", sender) == false) {
-                if (permissionManager.askPermission(null, "deathtimer_use", sender) == false) {
-                    sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
-                    return true;
-                }
-            }
-        } else {
-            if (!sender.isOp()) {
-                sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
-                return true;
-            }
+        if (!sender.hasPermission("deathtimer.use")) {
+            sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
+            return true;
         }
 
         if (args.length == 0) {
@@ -74,20 +63,11 @@ public class Timer implements CommandExecutor, TabCompleter {
     }
 
     private void toggle(CommandSender sender) {
-        if (plugin.redPermsAPI) {
-            PermissionManager permissionManager = new PermissionManager();
-            if (permissionManager.askPermission(null, "deathtimer_all", sender) == false) {
-                if (permissionManager.askPermission(null, "deathtimer_toggle_timer", sender) == false) {
-                    sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
-                    return;
-                }
-            }
-        } else {
-            if (!sender.isOp()) {
-                sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
-                return;
-            }
+        if (!sender.hasPermission("deathtimer.toggle.timer") || !sender.hasPermission("deathtimer.use")) {
+            sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
+            return;
         }
+
 
         if (!plugin.failed) {
             plugin.isPaused = !plugin.isPaused;
@@ -111,21 +91,13 @@ public class Timer implements CommandExecutor, TabCompleter {
             sender.sendMessage("");
         }
     }
+
     boolean isReset = false;
+
     private void reset(CommandSender sender) {
-        if (plugin.redPermsAPI) {
-            PermissionManager permissionManager = new PermissionManager();
-            if (permissionManager.askPermission(null, "deathtimer_all", sender) == false) {
-                if (permissionManager.askPermission(null, "deathtimer_reset", sender) == false) {
-                    sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
-                    return;
-                }
-            }
-        } else {
-            if (!sender.isOp()) {
-                sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
-                return;
-            }
+        if (!sender.hasPermission("deathtimer.reset") || !sender.hasPermission("deathtimer.use")) {
+            sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
+            return;
         }
 
         PlayerDeath bossBar = new PlayerDeath(plugin);
@@ -152,19 +124,9 @@ public class Timer implements CommandExecutor, TabCompleter {
     }
 
     private void auto(CommandSender sender) {
-        if (plugin.redPermsAPI) {
-            PermissionManager permissionManager = new PermissionManager();
-            if (permissionManager.askPermission(null, "deathtimer_all", sender) == false) {
-                if (permissionManager.askPermission(null, "deathtimer_toggle_auto", sender) == false) {
-                    sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
-                    return;
-                }
-            }
-        } else {
-            if (!sender.isOp()) {
-                sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
-                return;
-            }
+        if (!sender.hasPermission("deathtimer.toggle.auto") || !sender.hasPermission("deathtimer.use")) {
+            sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
+            return;
         }
 
         plugin.autostart = !plugin.autostart;
@@ -178,19 +140,9 @@ public class Timer implements CommandExecutor, TabCompleter {
 
     private void hint(CommandSender sender) {
 
-        if (plugin.redPermsAPI) {
-            PermissionManager permissionManager = new PermissionManager();
-            if (permissionManager.askPermission(null, "deathtimer_all", sender) == false) {
-                if (permissionManager.askPermission(null, "deathtimer_toggle_hint", sender) == false) {
-                    sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
-                    return;
-                }
-            }
-        } else {
-            if (!sender.isOp()) {
-                sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
-                return;
-            }
+        if (!sender.hasPermission("deathtimer.toggle.hint") || !sender.hasPermission("deathtimer.use")) {
+            sender.sendMessage(plugin.prefix + "§cYou don't have permission to use this command!");
+            return;
         }
 
         plugin.hint = !plugin.hint;
@@ -204,32 +156,18 @@ public class Timer implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        if (plugin.redPermsAPI) {
-            PermissionManager permissionManager = new PermissionManager();
-            if (permissionManager.askPermission(null, "deathtimer_all", sender) == false) {
-                if (permissionManager.askPermission(null, "deathtimer_use", sender) == false) {
-                    return List.of();
-                }
-            }
-        } else {
-            if (!sender.isOp()) {
-                return List.of();
-            }
+        if (!sender.hasPermission("deathtimer.use")) {
+            return List.of();
         }
 
         List<String> suggest = new ArrayList<>();
         String value = args[0].toLowerCase(Locale.ROOT);
 
-        if (plugin.redPermsAPI) {
-            PermissionManager p = new PermissionManager();
-            suggest = Stream.of(p.askPermission(null, "deathtimer_toggle_timer", sender) || p.askPermission(null, "deathtimer_all", sender) ? "toggle" : "",
-                    p.askPermission(null, "deathtimer_reset", sender) || p.askPermission(null, "deathtimer_all", sender) ? "reset" : "",
-                    p.askPermission(null, "deathtimer_toggle_auto", sender) || p.askPermission(null, "deathtimer_all", sender) ? "auto" : "",
-                    p.askPermission(null, "deathtimer_toggle_hint", sender) || p.askPermission(null, "deathtimer_all", sender) ? "hint" : "").filter(s -> s.startsWith(value)).toList();
-            return suggest;
-        }
+        suggest = Stream.of(sender.hasPermission("deathtimer.toggle.timer") ? "toggle" : "",
+                sender.hasPermission("deathtimer.reset") ? "reset" : "",
+                sender.hasPermission("deathtimer.toggle.auto") ? "auto" : "",
+                sender.hasPermission("deathtimer.toggle.hint") ? "hint" : "").filter(s -> s.startsWith(value)).toList();
 
-        suggest = Stream.of("toggle", "reset", "auto", "hint").filter(s -> s.startsWith(value)).collect(java.util.stream.Collectors.toList());
         return args.length == 1 ? suggest : List.of();
     }
 }
