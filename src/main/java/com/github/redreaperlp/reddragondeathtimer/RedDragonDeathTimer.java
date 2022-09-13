@@ -141,15 +141,6 @@ public class RedDragonDeathTimer extends JavaPlugin implements Listener {
         } else {
             GamerulesOn();
         }
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (getConfig().get(player.getUniqueId().toString()) != null) {
-                List<String> permissions = getConfig().getStringList(player.getUniqueId().toString());
-                for (String permission : permissions) {
-                    player.addAttachment(this).setPermission(permission, true);
-                }
-                getConfig().set(player.getUniqueId().toString(), null);
-            }
-        }
     }
 
     public void waitOff() {

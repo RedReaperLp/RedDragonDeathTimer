@@ -1,0 +1,39 @@
+name: RedDragonDeathTimer
+website: https://wlo.link/@redreaperlp
+version: '2.0.3'
+main: com.github.redreaperlp.reddragondeathtimer.RedDragonDeathTimer
+api-version: 1.19
+softdepend: [ RedPermsAPI ]
+authors: [ RedReaperLp ]
+commands:
+  timer:
+
+permissions:
+  deathtimer.*:
+    default: op
+    children:
+      deathtimer.use: true
+      deathtimer.reset: true
+      deathtimer.toggle.*: true
+
+  deathtimer.use:
+    default: op
+    children:
+      deathtimer.toggle.timer: true
+
+  deathtimer.toggle.*:
+    default: op
+    children:
+      deathtimer.toggle.hint: true
+      deathtimer.toggle.auto: true
+      deathtimer.toggle.timer: true
+
+  deathtimer.toggle.timer:
+    default: op
+  deathtimer.toggle.auto:
+    default: op
+
+
+  deathtimer.reset:
+    default: op
+
